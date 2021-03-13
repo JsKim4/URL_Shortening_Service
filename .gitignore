@@ -3,3 +3,4 @@
 mysql/var
 rabbitmq/var
 redis/myredis
+nohup.out
