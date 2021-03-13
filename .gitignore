@@ -1,2 +1,5 @@
 .idea
 .gradle
+mysql/var
+rabbitmq/var
+redis/myredis

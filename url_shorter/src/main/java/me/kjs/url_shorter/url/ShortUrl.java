@@ -4,22 +4,21 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SequenceGenerator(name = "SHORT_URL_SEQ_GENERATOR", sequenceName = "SHORT_URL_SEQ_GENERATOR", initialValue = 1, allocationSize = 1)
 public class ShortUrl {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @Column(name = "short_url_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SHORT_URL_SEQ_GENERATOR")
     private Long id;
     private String shortResource;
     private String host;
     private String resource;
     private Integer port;
+    @Enumerated(EnumType.STRING)
     private Protocol protocol;
     private long requestCount;
     private LocalDateTime aggregateDateTime;
@@ -46,7 +45,7 @@ public class ShortUrl {
                 .build();
     }
 
-    public String getUrl() {
+    public String getFullUrl() {
         return protocol.getProtocol() + host + (port == 0 ? "" : port) + resource;
     }
 
@@ -54,8 +53,8 @@ public class ShortUrl {
         return shortResource;
     }
 
-    public void aggregateRequestCount(long count, LocalDateTime aggregateDateTime) {
-        requestCount = count;
+    public void addAggregateRequestCount(long count, LocalDateTime aggregateDateTime) {
+        requestCount += count;
         this.aggregateDateTime = aggregateDateTime;
     }
 
@@ -63,4 +62,15 @@ public class ShortUrl {
         return requestCount;
     }
 
+    public void updateShortResource(String shortResource) {
+        this.shortResource = shortResource;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalDateTime getAggregateDateTime() {
+        return aggregateDateTime;
+    }
 }

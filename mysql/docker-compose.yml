@@ -1,0 +1,13 @@
+version: '2'
+services:
+  mysql4url_shortner:
+    image: mysql:5.7.33
+    container_name: mysql4url_shortner
+    environment:
+      - MYSQL_ROOT_PASSWORD=passw@rd
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./var/lib/mysql:/var/lib/mysql
+      - ./init.sql:/data/application/init.sql
+    command: --init-file /data/application/init.sql

@@ -1,0 +1,10 @@
+version: '2'
+services:
+  rabbitmq4url_shortner:
+    image: rabbitmq:3-management
+    container_name: rabbitmq4url_shortner
+    ports:
+      - '15672:15672'
+      - '5672:5672'
+    volumes:
+      - ./var/lib/rabbitmq:/var/lib/rabbitmq
