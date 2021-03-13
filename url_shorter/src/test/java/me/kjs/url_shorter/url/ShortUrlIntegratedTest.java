@@ -39,13 +39,14 @@ class ShortUrlIntegratedTest {
     static protected GenericContainer rabbitMQContainer = new GenericContainer("rabbitmq:3-management")
             .withExposedPorts(5672, 15672);
     @Container
-    static protected GenericContainer redisContainer = new GenericContainer("redis")
+    static protected GenericContainer redisContainer = new GenericContainer("redis:6.2")
             .withExposedPorts(6379);
     @Autowired
     protected ObjectMapper objectMapper;
     protected MockMvc mockMvc;
     @Autowired
     private WebApplicationContext ctx;
+
     @BeforeEach
     @Profile("default")
     public void setup() {
@@ -56,6 +57,7 @@ class ShortUrlIntegratedTest {
                 .build();
 
     }
+
     static class ContainerPropertyInitialize implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
@@ -65,8 +67,8 @@ class ShortUrlIntegratedTest {
             String redisIpAddress = rabbitMQContainer.getContainerIpAddress();
             TestPropertyValues testPropertyValues = TestPropertyValues.of("spring.rabbitmq.port=" + rabbitMQMappedPort,
                     "spring.rabbitmq.host=" + rabbitMQIpAddress,
-                    "spring.redis.port="+redisMappedPort,
-                    "spring.redis.host="+redisIpAddress);
+                    "spring.redis.port=" + redisMappedPort,
+                    "spring.redis.host=" + redisIpAddress);
             testPropertyValues.applyTo(applicationContext);
         }
     }
@@ -97,9 +99,9 @@ class ShortUrlIntegratedTest {
                 .andReturn();
         MockHttpServletResponse secondResponse = mvcResult2.getResponse();
         ShortUrlForm.Response.FindOne secondResult = objectMapper.readValue(secondResponse.getContentAsString(), ShortUrlForm.Response.FindOne.class);
-        assertEquals(firstResult.getShortResource(),secondResult.getShortResource());
+        assertEquals(firstResult.getShortResource(), secondResult.getShortResource());
     }
-    
+
     @Test
     @DisplayName("url 조회 테스트")
     void findOneTest() throws Exception {
@@ -119,10 +121,9 @@ class ShortUrlIntegratedTest {
         MockHttpServletResponse firstResponse = mvcResult.getResponse();
         ShortUrlForm.Response.FindOne firstResult = objectMapper.readValue(firstResponse.getContentAsString(), ShortUrlForm.Response.FindOne.class);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/url/{shortResource}",firstResult.getShortResource()))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/url/{shortResource}", firstResult.getShortResource()))
                 .andExpect(jsonPath("fullUrl").value(fullUrl));
     }
 
-    
 
 }
