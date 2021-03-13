@@ -14,7 +14,7 @@ public class ShortUrlService {
     private final Base62Encoder base62Encoder;
 
     @Transactional
-    protected ShortUrl createShortUrl(ShortUrlCreator creator) {
+    public ShortUrl createShortUrl(ShortUrlCreator creator) {
         ShortUrl shortUrl = shortUrlRepository.findByProtocolAndHostAndPortAndResource(
                 creator.getProtocol(),
                 creator.getHost(),
