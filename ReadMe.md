@@ -12,7 +12,7 @@
 6. Database 사용은 필수 아님
 
 ## 기획
-
+---
 ### 기능 기획
 - SpringBoot 를 활용하여 개발
 - URL Shortening은 URL Shortening 요청시 요청 데이터 저장 후 자동적으로 증가하는 ID 값을 사용하여 Shortering 
@@ -24,8 +24,8 @@
 ### 기술 스택
 - SpringBoot
 - SpringDataJPA
-- Reids
-- Postgresql
+- Redis
+- mysql
 - RabbitMQ
 - Thymeleaf
 - JUnit5
