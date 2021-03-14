@@ -22,6 +22,7 @@
 ### ubuntu 18.04
 - 최소 실행 환경 구축 명령어
     - 관리도구 설치
+    
             sudo apt-get install unzip
             sudo apt-get install zip
             curl -s "https://get.sdkman.io" | bash
