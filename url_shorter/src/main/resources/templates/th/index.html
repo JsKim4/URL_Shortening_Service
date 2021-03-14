@@ -55,7 +55,7 @@
                 const resource = document.getElementById('resource');
                 const port = document.getElementById('port');
                 const host = document.getElementById('host');
-                let portNumber;
+                let portNumber = 0;
                 let hostValue;
                 let resourceValue;
                 let protocolValue;
@@ -71,7 +71,7 @@
                 }
                 if (inputUrl.indexOf(":") !== -1) {
                     let split = inputUrl.split(":");
-                    host.value = split[0];
+                    hostValue = split[0];
                     let number = split[1].indexOf("/");
                     let portNumber = split[1].substr(0, number);
                     if (portNumber < 0 || portNumber > 65535) {
