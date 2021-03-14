@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static me.kjs.url_shorter.common.ThrowUtil.hasErrorsThrow;
+import static me.kjs.url_shorter.url.UrlValidator.validation;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,11 +44,6 @@ public class ShortUrlApiController {
         return ResponseEntity.created(uri).body(body);
     }
 
-    private void validation(ShortUrlForm.Request.Creator creator, Errors errors) {
-        if (creator.getResource() != null && !creator.getResource().startsWith("/")) {
-            errors.rejectValue("resource","wrong value","리소스는 null 이거나 / 로 시작해야합니다.");
-        }
-    }
 
     @GetMapping("/{shortResource}")
     public ResponseEntity<ShortUrlForm.Response.FindOne> findByShortResource(@PathVariable String shortResource) {

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/url_shortner_db?serverTimezone=UTC
+    url: jdbc:mysql://localhost:13306/url_shortner_db?serverTimezone=UTC
     username: url_shortner_user # 읽기 쓰기 권한만 있는 사용자 지정
     password: url_shortner_user_pw
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SequenceGenerator(name = "SHORT_URL_SEQ_GENERATOR", sequenceName = "SHORT_URL_SEQ_GENERATOR", initialValue = 1, allocationSize = 1)
 public class ShortUrl {
-    @Id @Column(name = "short_url_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "SHORT_URL_SEQ_GENERATOR")
+    @Id
+    @Column(name = "short_url_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SHORT_URL_SEQ_GENERATOR")
     private Long id;
     private String shortResource;
     private String host;
@@ -48,7 +49,7 @@ public class ShortUrl {
     }
 
     public String getFullUrl() {
-        return protocol.getProtocol() + host + (port ==null || port == 0  ? "" : port) + resource;
+        return protocol.getProtocol() + host + (port == null || port == 0 ? "" : ":" + port) + resource;
     }
 
     public String getShortResource() {

@@ -1,9 +1,6 @@
 package me.kjs.url_shorter.url.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import me.kjs.url_shorter.url.entity.ShortUrl;
 import me.kjs.url_shorter.url.type.Protocol;
 
@@ -16,6 +13,7 @@ import java.time.LocalDateTime;
 public class ShortUrlForm {
     public static class Request {
         @Getter
+        @Setter
         @Builder
         @NoArgsConstructor
         @AllArgsConstructor

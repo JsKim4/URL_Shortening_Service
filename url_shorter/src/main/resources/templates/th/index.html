@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Hello Thymeleaf</title></head>
+<body>
+<h1>URL Shortener</h1>
+<table th:if="${shortUrl != null}">
+    <tr>
+        <td>FullUrl :</td>
+        <td th:text="${shortUrl.fullUrl}">Full Url</td>
+    </tr>
+    <tr>
+        <td>Short Resource :</td>
+        <td>
+            <a id="shortResourceForm" target="_blank" th:href="${shortUrl.shortResource}"
+               th:text="${shortUrl.shortResource}"></a>
+        </td>
+    </tr>
+    <tr>
+        <td>Hit :</td>
+        <td th:text="${shortUrl.requestCount}">requestCount</td>
+    </tr>
+    <tr>
+        <td>AggregateDateTime :</td>
+        <td th:text="${shortUrl.aggregateDateTime}">AggregateDateTime</td>
+    </tr>
+</table>
+<form action="/" method="get">
+    <input th:type="text" id="shortResource" name="shortResource"/>
+    <input th:type="submit" value="검색">
+</form>
+<form action="/" method="post" id="addShortUrlForm">
+    <input th:type="text" id="addShortUrl" name="shortResource"/>
+    <input th:type="submit" value="추가">
+</form>
+
+<form action="/" method="post" id="realAddShortUrlForm">
+    <input type="hidden" id="protocol" name="protocol">
+    <input type="hidden" id="resource" name="resource">
+    <input type="hidden" id="port" name="port">
+    <input type="hidden" id="host" name="host">
+</form>
+<script type="application/javascript">
+    const shortResourceForm = document.getElementById('shortResourceForm');
+    shortResourceForm.prepend(location.protocol + "//" + location.host + "/");
+
+    function logSubmit(event, inputUrl) {
+        event.preventDefault();
+
+        function validationAndSetting(inputUrlForm) {
+            inputUrl = inputUrlForm.value;
+            console.log(inputUrl);
+            const protocol = document.getElementById('protocol');
+            const resource = document.getElementById('resource');
+            const port = document.getElementById('port');
+            const host = document.getElementById('host');
+            if (inputUrl.startsWith("https://")) {
+                protocol.value = "HTTPS";
+                inputUrl = inputUrl.replace("https://", "");
+            } else if (inputUrl.startsWith("http://")) {
+                protocol.value = "HTTP";
+                inputUrl = inputUrl.replace("http://", "");
+            } else {
+                alert("https:// 혹은 http:// 로 시작해야합니다.")
+                return false;
+            }
+            if (inputUrl.indexOf(":") !== -1) {
+                let split = inputUrl.split(":");
+                host.value = split[0];
+                let number = split[1].indexOf("/");
+                let portNumber = split[1].substr(0, number);
+                port.value = portNumber;
+                let resourceValue = split[1].substr(number);
+                resource.value = resourceValue;
+            } else {
+                let number = inputUrl.indexOf("/");
+                let hostValue = inputUrl.substr(0, number);
+                host.value = hostValue;
+                let portNumber = 0;
+                port.value = portNumber;
+                let resourceValue = inputUrl.substr(number);
+                resource.value = resourceValue;
+            }
+            console.log(protocol);
+            console.log(resource);
+            console.log(port);
+            console.log(host);
+            return true;
+        }
+
+        validationAndSetting(inputUrl);
+        const form = document.getElementById('realAddShortUrlForm');
+        form.submit();
+    }
+
+    const form = document.getElementById('addShortUrlForm');
+    const inputUrl = document.getElementById('addShortUrl');
+    form.addEventListener('submit', (event) => logSubmit(event, inputUrl));
+
+</script>
+</body>
+</html>
