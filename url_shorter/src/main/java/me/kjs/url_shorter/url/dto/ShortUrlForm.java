@@ -22,7 +22,7 @@ public class ShortUrlForm {
             private String host;
             @Min(0) @Max(65535)
             private Integer port;
-            @NotEmpty
+            @NotNull
             private String resource;
             @NotNull
             private Protocol protocol;

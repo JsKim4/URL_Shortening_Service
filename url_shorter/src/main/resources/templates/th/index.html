@@ -26,10 +26,6 @@
         <td th:text="${shortUrl.aggregateDateTime}">AggregateDateTime</td>
     </tr>
 </table>
-<form action="/" method="get">
-    <input th:type="text" id="shortResource" name="shortResource"/>
-    <input th:type="submit" value="검색">
-</form>
 <form action="/" method="post" id="addShortUrlForm">
     <input th:type="text" id="addShortUrl" name="shortResource"/>
     <input th:type="submit" value="추가">
@@ -43,8 +39,6 @@
 </form>
 <script type="application/javascript">
     document.addEventListener("DOMContentLoaded", function () {
-
-
         const form = document.getElementById('addShortUrlForm');
         const inputUrl = document.getElementById('addShortUrl');
         form.addEventListener('submit', (event) => logSubmit(event, inputUrl));
@@ -57,16 +51,19 @@
 
             function validationAndSetting(inputUrlForm) {
                 inputUrl = inputUrlForm.value;
-                console.log(inputUrl);
                 const protocol = document.getElementById('protocol');
                 const resource = document.getElementById('resource');
                 const port = document.getElementById('port');
                 const host = document.getElementById('host');
+                let portNumber;
+                let hostValue;
+                let resourceValue;
+                let protocolValue;
                 if (inputUrl.startsWith("https://")) {
-                    protocol.value = "HTTPS";
+                    protocolValue = "HTTPS";
                     inputUrl = inputUrl.replace("https://", "");
                 } else if (inputUrl.startsWith("http://")) {
-                    protocol.value = "HTTP";
+                    protocolValue = "HTTP";
                     inputUrl = inputUrl.replace("http://", "");
                 } else {
                     alert("https:// 혹은 http:// 로 시작해야합니다.")
@@ -77,26 +74,36 @@
                     host.value = split[0];
                     let number = split[1].indexOf("/");
                     let portNumber = split[1].substr(0, number);
-                    port.value = portNumber;
-                    let resourceValue = split[1].substr(number);
-                    resource.value = resourceValue;
+                    if (portNumber < 0 || portNumber > 65535) {
+                        alert("포트 번호는 0 이상 65535 이하여야 합니다.");
+                        return false;
+                    }
+                    resourceValue = split[1].substr(number);
                 } else {
+                    portNumber = 0;
                     let number = inputUrl.indexOf("/");
-                    let hostValue = inputUrl.substr(0, number);
-                    host.value = hostValue;
-                    let portNumber = 0;
-                    port.value = portNumber;
-                    let resourceValue = inputUrl.substr(number);
-                    resource.value = resourceValue;
+                    if (number == -1) {
+                        hostValue = inputUrl;
+                        resourceValue = "/";
+                    } else {
+                        hostValue = inputUrl.substr(0, number);
+                        resourceValue = inputUrl.substr(number);
+                    }
+                    if (hostValue.indexOf(".") == -1) {
+                        alert("host 이름에 '.'이 포함되지 않았습니다.");
+                        return false;
+                    }
                 }
-                console.log(protocol);
-                console.log(resource);
-                console.log(port);
-                console.log(host);
+                port.value = portNumber;
+                resource.value = resourceValue;
+                host.value = hostValue;
+                protocol.value = protocolValue;
                 return true;
             }
 
-            validationAndSetting(inputUrl);
+            if (!validationAndSetting(inputUrl)) {
+                return;
+            }
             const form = document.getElementById('realAddShortUrlForm');
             form.submit();
         }
