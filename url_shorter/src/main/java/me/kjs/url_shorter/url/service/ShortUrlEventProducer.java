@@ -1,6 +1,7 @@
-package me.kjs.url_shorter.url;
+package me.kjs.url_shorter.url.service;
 
 import lombok.RequiredArgsConstructor;
+import me.kjs.url_shorter.url.type.MessageQueue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 

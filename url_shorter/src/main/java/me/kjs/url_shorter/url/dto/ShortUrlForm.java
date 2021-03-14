@@ -1,10 +1,14 @@
-package me.kjs.url_shorter.url;
+package me.kjs.url_shorter.url.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.kjs.url_shorter.url.entity.ShortUrl;
+import me.kjs.url_shorter.url.type.Protocol;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -18,6 +22,7 @@ public class ShortUrlForm {
         public static class Creator implements ShortUrlCreator {
             @NotEmpty
             private String host;
+            @Min(0) @Max(65535)
             private Integer port;
             @NotEmpty
             private String resource;

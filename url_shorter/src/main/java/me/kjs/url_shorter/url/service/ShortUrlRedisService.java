@@ -1,4 +1,4 @@
-package me.kjs.url_shorter.url;
+package me.kjs.url_shorter.url.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

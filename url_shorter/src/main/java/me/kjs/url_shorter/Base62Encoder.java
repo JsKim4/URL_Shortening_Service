@@ -1,5 +1,6 @@
 package me.kjs.url_shorter;
 
+
 import org.springframework.stereotype.Component;
 
 @Component

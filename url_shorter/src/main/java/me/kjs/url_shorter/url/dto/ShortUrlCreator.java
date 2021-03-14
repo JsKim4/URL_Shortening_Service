@@ -1,4 +1,6 @@
-package me.kjs.url_shorter.url;
+package me.kjs.url_shorter.url.dto;
+
+import me.kjs.url_shorter.url.type.Protocol;
 
 public interface ShortUrlCreator {
     String getHost();

@@ -1,10 +1,12 @@
-package me.kjs.url_shorter.url;
+package me.kjs.url_shorter.url.service;
 
 import lombok.RequiredArgsConstructor;
 import me.kjs.url_shorter.Base62Encoder;
+import me.kjs.url_shorter.url.entity.ShortUrl;
+import me.kjs.url_shorter.url.repository.ShortUrlRepository;
+import me.kjs.url_shorter.url.dto.ShortUrlCreator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.Errors;
 
 @Service
 @RequiredArgsConstructor

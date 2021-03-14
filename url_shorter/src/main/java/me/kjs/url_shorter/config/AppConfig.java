@@ -3,9 +3,11 @@ package me.kjs.url_shorter.config;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import me.kjs.url_shorter.config.serializer.ErrorsResourceSerializer;
 import me.kjs.url_shorter.config.serializer.LocalDateTimeSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.Errors;
 
 import java.time.LocalDateTime;
 
@@ -16,6 +18,7 @@ public class AppConfig {
         ObjectMapper objectMapper = new ObjectMapper();
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
+        simpleModule.addSerializer(Errors.class, new ErrorsResourceSerializer());
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         objectMapper.registerModule(simpleModule);
 

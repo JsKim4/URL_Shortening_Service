@@ -1,8 +1,10 @@
-package me.kjs.url_shorter.url;
+package me.kjs.url_shorter.url.entity;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import me.kjs.url_shorter.url.dto.ShortUrlCreator;
+import me.kjs.url_shorter.url.type.Protocol;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -46,7 +48,7 @@ public class ShortUrl {
     }
 
     public String getFullUrl() {
-        return protocol.getProtocol() + host + (port == 0 ? "" : port) + resource;
+        return protocol.getProtocol() + host + (port ==null || port == 0  ? "" : port) + resource;
     }
 
     public String getShortResource() {

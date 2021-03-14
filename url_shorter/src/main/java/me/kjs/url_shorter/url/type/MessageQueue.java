@@ -1,4 +1,4 @@
-package me.kjs.url_shorter.url;
+package me.kjs.url_shorter.url.type;
 
 
 public enum MessageQueue {

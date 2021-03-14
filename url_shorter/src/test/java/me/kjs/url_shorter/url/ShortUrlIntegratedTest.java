@@ -1,6 +1,8 @@
 package me.kjs.url_shorter.url;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.kjs.url_shorter.url.dto.ShortUrlForm;
+import me.kjs.url_shorter.url.type.Protocol;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Transactional
@@ -39,7 +42,7 @@ class ShortUrlIntegratedTest {
     static protected GenericContainer rabbitMQContainer = new GenericContainer("rabbitmq:3-management")
             .withExposedPorts(5672, 15672);
     @Container
-    static protected GenericContainer redisContainer = new GenericContainer("redis:6.2")
+    static protected GenericContainer redisContainer = new GenericContainer("redis")
             .withExposedPorts(6379);
     @Autowired
     protected ObjectMapper objectMapper;
@@ -85,6 +88,7 @@ class ShortUrlIntegratedTest {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/url")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(creator)))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("shortResource").isNotEmpty())
                 .andExpect(jsonPath("fullUrl").value("https://github.com/JsKim4"))
                 .andReturn();
@@ -115,6 +119,7 @@ class ShortUrlIntegratedTest {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/url")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(creator)))
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("shortResource").isNotEmpty())
                 .andExpect(jsonPath("fullUrl").value(fullUrl))
                 .andReturn();
@@ -122,8 +127,65 @@ class ShortUrlIntegratedTest {
         ShortUrlForm.Response.FindOne firstResult = objectMapper.readValue(firstResponse.getContentAsString(), ShortUrlForm.Response.FindOne.class);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/url/{shortResource}", firstResult.getShortResource()))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("fullUrl").value(fullUrl));
     }
 
+    @Test
+    @DisplayName("url 조회 실패 테스트")
+    void findOneFailByNotFoundTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/url/{shortResource}", "ZZ"))
+                .andExpect(status().isNotFound());
+    }
 
+    @Test
+    @DisplayName("URL Create 1차 Validation 실패 테스트")
+    void createShortUrlFailByFirstValidation() throws Exception {
+        ShortUrlForm.Request.Creator creator = ShortUrlForm.Request.Creator.builder()
+                .resource("/JsKim4")
+                .host("github.com")
+                .protocol(null)
+                .port(-1)
+                .build();
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/url")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(creator)))
+                .andExpect(status().isBadRequest());
+    }
+    @Test
+    @DisplayName("URL Create 2차 Validation 실패 테스트")
+    void createShortUrlFailBySecondValidation() throws Exception {
+        ShortUrlForm.Request.Creator creator = ShortUrlForm.Request.Creator.builder()
+                .resource("JsKim4")
+                .host("github.com")
+                .protocol(Protocol.HTTPS)
+                .port(0)
+                .build();
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/url")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(creator)))
+                .andExpect(status().isBadRequest());
+    }
+    @Test
+    @DisplayName("URL Redirect 테스트")
+    void urlRedirectTest() throws Exception{
+        ShortUrlForm.Request.Creator creator = ShortUrlForm.Request.Creator.builder()
+                .resource("/JsKim4")
+                .host("github.com")
+                .protocol(Protocol.HTTPS)
+                .port(0)
+                .build();
+        String fullUrl = "https://github.com/JsKim4";
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post("/api/url")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(creator)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("shortResource").isNotEmpty())
+                .andExpect(jsonPath("fullUrl").value(fullUrl))
+                .andReturn();
+        MockHttpServletResponse firstResponse = mvcResult.getResponse();
+        ShortUrlForm.Response.FindOne firstResult = objectMapper.readValue(firstResponse.getContentAsString(), ShortUrlForm.Response.FindOne.class);
+        mockMvc.perform(MockMvcRequestBuilders.get("/{shortResource}",firstResult.getShortResource()))
+                .andDo(print());
+    }
 }
