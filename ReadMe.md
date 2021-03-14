@@ -47,16 +47,35 @@
             sudo chmod +x /usr/local/bin/docker-compose
             sudo chmod 777 /var/run/docker.sock
 
-- 실행
-    -   jar 파일로 빌드
-        - cd url_shorter
-        - gradle build
-    -   프로젝트 root 위치에서 실행
-        - ./startup.sh
-- 종료
-    -   프로젝트 root 위치에서 종료
-        - ./shutdown.sh
 
+- 환경 프로그램
+    - 환경 프로그램 실행
+
+            ./setup.sh
+    - 환경 프로그램 실행 확인
+
+            docker ps
+
+        ![check_docker](./img/check.PNG)
+
+    - 환경 프로그램 종료
+
+            ./setdown.sh
+    
+- 서비스 프로그램
+    - 실행
+        - 프로젝트 root 위치에서 실행
+
+                ./startup.sh
+
+    - 종료
+        -   프로젝트 root 위치에서 종료
+            
+                ./shutdown.sh
+- 프로그램 빌드
+    
+        cd url_shorter
+        gradle build
     
 ## 기획
 ---
