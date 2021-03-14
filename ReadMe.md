@@ -28,11 +28,15 @@
             source "$HOME/.sdkman/bin/sdkman-init.sh"
             
     - Gradle 다운로드    
+            
             sdk install gradle 5.6.1
 
     - JAVA 다운로드
+            
             sdk install java
+
     -   Docker & Docker-compoer 다운로드
+            
             sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
             sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
             sudo apt-key fingerprint 0EBFCD88
