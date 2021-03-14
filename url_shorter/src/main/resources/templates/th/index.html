@@ -73,7 +73,7 @@
                     let split = inputUrl.split(":");
                     hostValue = split[0];
                     let number = split[1].indexOf("/");
-                    let portNumber = split[1].substr(0, number);
+                    portNumber = split[1].substr(0, number);
                     if (portNumber < 0 || portNumber > 65535) {
                         alert("포트 번호는 0 이상 65535 이하여야 합니다.");
                         return false;
